@@ -2,6 +2,8 @@ module.exports = (window.requestFileSystem || window.webkitRequestFileSystem)
   ? require('./filesystem')
   : require('./indexeddb');
 
+module.exports.unlink = module.exports.removeFile;
+
 module.exports.DirectoryEntry = require('./directory_entry');
 
 module.exports.DirectoryEntry.prototype.readFile = function (callback) {
