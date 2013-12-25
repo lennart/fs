@@ -68,14 +68,23 @@ exports.writeFile = function (fileName, data, callback) {
       fileEntry.createWriter(function (fileWriter) {
         var err = null;
         fileWriter.onwriteend = function (e) {
-          callback(err);
+          // Check if File is truncated
+          if (fileWriter.length === 0) {
+            fileWriter.write(data);
+          }
+          // otherwise you're done
+          else {
+            callback(err);  
+          }
         };
 
         fileWriter.onerror = function (e) {
           err = e.toString();
         };
 
-        fileWriter.write(data);
+        // empty file before writing to avoid
+        // data corruption
+        fileWriter.truncate(0);
       });
     }, function onError(err) {
       callback(err);
